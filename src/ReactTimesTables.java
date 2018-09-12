@@ -1,6 +1,7 @@
 import javax.swing.JFrame;
 import javax.swing.JTable;
 import java.awt.*;
+import java.util.Arrays;
 import javax.swing.JScrollPane;
 
 
@@ -11,43 +12,45 @@ public class ReactTimesTables extends JFrame {
 
 
         int size=10;
-        String[]  colData = new String[size+1];
-        String[][] rowData = new String[size ][size+1];
 
-        for(int a=0;a<colData.length;a++){
-            colData[a]=""+a;
-        }
+        String[][] rowData = new String[size+1 ][size+1];
 
-        for(int cellRow = 0;cellRow<rowData.length;cellRow++){
+        for(int cellRow = 0;cellRow<size + 1;cellRow++) {
 
-            for (int cellCol = 0; cellCol < rowData[0].length; cellCol++) {
-                if(cellCol==0){
-                    rowData[cellRow][cellCol]=""+(cellRow+1);
-                }else{
-                    rowData[cellRow][cellCol] = ""+(cellRow + 1) * cellCol;}
+            for (int cellCol = 0; cellCol < size + 1; cellCol++) {
+                if (cellRow == 0 && cellCol == 0)
+                    rowData[cellRow][cellCol] = "x";
+                else if (cellCol == 0) {
+                    rowData[cellRow][cellCol] = "" + cellRow;
+                } else if (cellRow == 0) {
+                    rowData[cellRow][cellCol] = "" + cellCol;
+                } else {
+                    rowData[cellRow][cellCol] = "" + (cellRow) * cellCol;
+                }
             }
         }
 
+        jt =new JTable(rowData, rowData[0])
+        {       //disable user edit in JTable by overriding issCellEditable and return false
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
 
-        jt =new JTable(rowData,colData);
 
 
-
-        jt.setPreferredScrollableViewportSize(new Dimension(500,500));
+        jt.setPreferredScrollableViewportSize(new Dimension(600,600));
         // to all data without scrolling.
         jt.setFillsViewportHeight(true);
-        JScrollPane scrollPane=new JScrollPane(jt);
-
-        add(scrollPane);
+        jt.setRowSelectionAllowed(false);
+        add(jt);
     }
 
     public static void main(String args[]){
-        JFrame jt=new JFrame("React Times Table");
         ReactTimesTables t=new ReactTimesTables();
-        jt.setSize(600,600);
-        jt.setVisible(true);
-        jt.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        jt.add(t);
+        t.setSize(600,600);
+        t.setVisible(true);
+        t.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
 }
